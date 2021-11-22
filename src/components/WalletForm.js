@@ -20,8 +20,8 @@ class WalletForm extends React.Component {
       value: 0,
       description: '',
       currency: 'USD',
-      method: 'credit',
-      tag: 'food',
+      method: 'Cartão de crédito',
+      tag: 'Alimentação',
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);

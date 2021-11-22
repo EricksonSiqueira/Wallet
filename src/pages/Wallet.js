@@ -23,8 +23,10 @@ class Wallet extends React.Component {
         <header>
           <h3 data-testid="email-field">{email}</h3>
           <section>
-            <p data-testid="total-field">{totalWalletValue}</p>
-            <p data-testid="header-currency-field">BRL</p>
+            <p data-testid="total-field">
+              {totalWalletValue || '0'}
+              <span data-testid="header-currency-field">BRL</span>
+            </p>
           </section>
         </header>
         <WalletForm />

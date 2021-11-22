@@ -13,7 +13,8 @@ class Wallet extends React.Component {
     const { populateCurrencies, getExchangeRates } = this.props;
     const currenciesObj = await getExchangeRates();
     const currencies = Object.keys(currenciesObj);
-    populateCurrencies(currencies);
+    const filteredCurrencies = currencies.filter((currency) => currency !== 'USDT');
+    populateCurrencies(filteredCurrencies);
   }
 
   render() {

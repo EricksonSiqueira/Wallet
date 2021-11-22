@@ -5,7 +5,13 @@ import { connect } from 'react-redux';
 class CurrencySelect extends React.Component {
   createOption(currency) {
     return (
-      <option key={ currency } value={ currency }>{ currency }</option>
+      <option
+        key={ currency }
+        value={ currency }
+        data-testid={ currency }
+      >
+        { currency }
+      </option>
     );
   }
 

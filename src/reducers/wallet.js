@@ -25,7 +25,9 @@ const walletReducer = (state = INITIAL_STATE, action) => {
   case UPDATE_TOTAL:
     return {
       ...state,
-      totalWalletValue: state.totalWalletValue + action.exchangedValue,
+      totalWalletValue: Number(
+        (state.totalWalletValue + action.exchangedValue).toFixed(2),
+      ),
     };
   case POPULATE_CURRENCIES:
     return {

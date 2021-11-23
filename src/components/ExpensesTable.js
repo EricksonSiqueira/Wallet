@@ -11,8 +11,15 @@ class ExpensesTable extends React.Component {
 
   getExchangedValue(id, expenses) {
     const expenseObj = expenses.find((expense) => expense.id === id);
-    const { exchangedValue } = expenseObj;
-    return (exchangedValue);
+    const { currency, value, exchangeRates } = expenseObj;
+    let currencyValue = 1;
+    const currencyObj = exchangeRates[currency];
+    if (currency !== 'BRL') {
+      currencyValue = currencyObj.ask;
+    }
+    const convertedValue = Number((currencyValue * value).toFixed(2));
+
+    return convertedValue;
   }
 
   removeExpense({ target }) {
@@ -20,7 +27,7 @@ class ExpensesTable extends React.Component {
     const { expenses, updateExpenses, updateTotalValue } = this.props;
     const updatedExpenses = expenses.filter((expense) => expense.id !== elementId);
     const negativeValueToRemove = -(this.getExchangedValue(elementId, expenses));
-    console.log(negativeValueToRemove);
+
     updateTotalValue(negativeValueToRemove);
     updateExpenses(updatedExpenses);
   }
@@ -37,7 +44,7 @@ class ExpensesTable extends React.Component {
       const cashNameArray = cashName.split('/');
       [onlyExchangeCashName] = cashNameArray;
     }
-    const convertedValue = currencyValue * value;
+    const convertedValue = Number((currencyValue * value).toFixed(2));
     return (
       <tr key={ id }>
         <td>{description}</td>

@@ -43,7 +43,6 @@ class WalletForm extends React.Component {
     const expense = {
       id: idGlobal,
       ...this.state,
-      exchangedValue,
       exchangeRates,
     };
 

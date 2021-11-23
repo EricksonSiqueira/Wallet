@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import WalletForm from '../components/WalletForm';
 import { populateCurrenciesAction, fetchExchangeRates } from '../actions';
+import ExpensesTable from '../components/ExpensesTable';
 
 class Wallet extends React.Component {
   componentDidMount() {
@@ -41,14 +42,19 @@ class Wallet extends React.Component {
         <td>Real</td>
         <td>
           <button type="button">Editar</button>
-          <button type="button">Excluir</button>
+          <button
+            type="button"
+            data-testid="delete-btn"
+          >
+            Excluir
+          </button>
         </td>
       </tr>
     );
   }
 
   render() {
-    const { email, totalWalletValue, expenses } = this.props;
+    const { email, totalWalletValue } = this.props;
     return (
       <div>
         <header>
@@ -61,22 +67,7 @@ class Wallet extends React.Component {
           </section>
         </header>
         <WalletForm />
-        <table>
-          <tbody>
-            <tr>
-              <th>Descrição</th>
-              <th>Tag</th>
-              <th>Método de pagamento</th>
-              <th>Valor</th>
-              <th>Moeda</th>
-              <th>Câmbio utilizado</th>
-              <th>Valor convertido</th>
-              <th>Moeda de conversão</th>
-              <th>Editar/Excluir</th>
-            </tr>
-            {expenses.map((expense) => this.createExpense(expense))}
-          </tbody>
-        </table>
+        <ExpensesTable />
       </div>
     );
   }
@@ -88,7 +79,6 @@ Wallet.defaultProps = {
 
 Wallet.propTypes = {
   email: PropTypes.string.isRequired,
-  expenses: PropTypes.arrayOf(PropTypes.any).isRequired,
   getExchangeRates: PropTypes.func.isRequired,
   populateCurrencies: PropTypes.func.isRequired,
   totalWalletValue: PropTypes.number,

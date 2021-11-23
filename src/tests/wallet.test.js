@@ -38,7 +38,7 @@ describe('2 - Crie uma página para sua carteira com as seguintes característic
   });
 });
 
-describe('3 - Crie um header para a página de carteira contendo as seguintes características:', () => {
+describe.only('3 - Crie um header para a página de carteira contendo as seguintes características:', () => {
   const initial = initialStateHeader;
 
   test('Um elemento que exiba o email do usuário que fez login.', () => {
@@ -217,7 +217,7 @@ describe('5 - Implemente a lógica para preencher as opções do campo "Moedas",
   });
 });
 
-describe.only('6 - Desenvolva uma tabela com os gastos contendo as seguintes características:', () => {
+describe('6 - Desenvolva uma tabela com os gastos contendo as seguintes características:', () => {
   const initial = initialStateWithExpenses;
 
   test('A tabela deve possuir um cabeçalho com os campos Descrição, Tag, Método de pagamento, Valor, Moeda, Câmbio utilizado, Valor convertido e Moeda de conversão', () => {

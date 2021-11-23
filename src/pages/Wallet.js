@@ -25,7 +25,7 @@ class Wallet extends React.Component {
           <h3 data-testid="email-field">{email}</h3>
           <section>
             <p data-testid="total-field">
-              {totalWalletValue || '0'}
+              {totalWalletValue}
               <span data-testid="header-currency-field">BRL</span>
             </p>
           </section>
@@ -51,11 +51,15 @@ class Wallet extends React.Component {
   }
 }
 
+Wallet.defaultProps = {
+  totalWalletValue: 0,
+};
+
 Wallet.propTypes = {
   email: PropTypes.string.isRequired,
   getExchangeRates: PropTypes.func.isRequired,
   populateCurrencies: PropTypes.func.isRequired,
-  totalWalletValue: PropTypes.number.isRequired,
+  totalWalletValue: PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({

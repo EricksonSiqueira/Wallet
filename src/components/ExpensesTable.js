@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { removeExpenseAction, updateTotalAction } from '../actions';
+import { removeExpenseAction } from '../actions';
 
 class ExpensesTable extends React.Component {
   constructor() {
@@ -25,11 +25,11 @@ class ExpensesTable extends React.Component {
   async removeExpense({ target }) {
     const elementId = Number(target.id);
     const { expenses, updateExpenses,
-      updateTotaWalletlValue } = this.props;
+      updateTotalValue } = this.props;
     const updatedExpenses = expenses.filter((expense) => expense.id !== elementId);
-
-    await updateExpenses(updatedExpenses);
-    await updateTotaWalletlValue();
+    const exchangedValue = this.getExchangedValue(elementId, expenses);
+    updateTotalValue(-exchangedValue);
+    updateExpenses(updatedExpenses);
   }
 
   createExpense(expense) {
@@ -96,7 +96,7 @@ class ExpensesTable extends React.Component {
 ExpensesTable.propTypes = {
   expenses: PropTypes.arrayOf(PropTypes.any).isRequired,
   updateExpenses: PropTypes.func.isRequired,
-  updateTotaWalletlValue: PropTypes.func.isRequired,
+  updateTotalValue: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -105,7 +105,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   updateExpenses: (newExpenses) => dispatch(removeExpenseAction(newExpenses)),
-  updateTotalValue: (value) => dispatch(updateTotalAction(value)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExpensesTable);

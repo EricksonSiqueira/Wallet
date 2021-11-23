@@ -9,20 +9,20 @@ class Wallet extends React.Component {
   constructor() {
     super();
     this.state = {
-      totalWalletValue: 0,
+      totalWalletValue: 0.00,
     };
-    this.updateTotaWalletlValue = this.updateTotaWalletlValue.bind(this);
+    this.getTotalValue = this.getTotalValue.bind(this);
+    this.updateTotalValue = this.updateTotalValue.bind(this);
   }
 
   componentDidMount() {
     this.fetchCurrencies();
-    this.updateTotaWalletlValue();
+    this.getTotalValue();
   }
 
-  updateTotaWalletlValue() {
+  getTotalValue() {
     const { expenses } = this.props;
     let totalValue = 0.00;
-    console.log(expenses);
     if (expenses.length > 0) {
       expenses.forEach((expense) => {
         const { currency, value, exchangeRates } = expense;
@@ -36,6 +36,12 @@ class Wallet extends React.Component {
 
     totalValue = totalValue.toFixed(2);
     this.setState({ totalWalletValue: totalValue });
+  }
+
+  updateTotalValue(value) {
+    const { totalWalletValue } = this.state;
+    const newTotalValue = Number(totalWalletValue) + value;
+    this.setState({ totalWalletValue: newTotalValue.toFixed(2) });
   }
 
   async fetchCurrencies() {
@@ -60,22 +66,18 @@ class Wallet extends React.Component {
             </p>
           </section>
         </header>
-        <WalletForm updateTotaWalletlValue={ this.updateTotaWalletlValue } />
-        <ExpensesTable updateTotaWalletlValue={ this.updateTotaWalletlValue } />
+        <WalletForm updateTotalValue={ this.updateTotalValue } />
+        <ExpensesTable updateTotalValue={ this.updateTotalValue } />
       </div>
     );
   }
 }
 
-Wallet.defaultProps = {
-  totalWalletValue: 0,
-};
-
 Wallet.propTypes = {
   email: PropTypes.string.isRequired,
+  expenses: PropTypes.arrayOf(PropTypes.any).isRequired,
   getExchangeRates: PropTypes.func.isRequired,
   populateCurrencies: PropTypes.func.isRequired,
-  totalWalletValue: PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({

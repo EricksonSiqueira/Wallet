@@ -22,14 +22,14 @@ class ExpensesTable extends React.Component {
     return convertedValue;
   }
 
-  removeExpense({ target }) {
+  async removeExpense({ target }) {
     const elementId = Number(target.id);
-    const { expenses, updateExpenses, updateTotalValue } = this.props;
+    const { expenses, updateExpenses,
+      updateTotaWalletlValue } = this.props;
     const updatedExpenses = expenses.filter((expense) => expense.id !== elementId);
-    const negativeValueToRemove = -(this.getExchangedValue(elementId, expenses));
 
-    updateTotalValue(negativeValueToRemove);
-    updateExpenses(updatedExpenses);
+    await updateExpenses(updatedExpenses);
+    await updateTotaWalletlValue();
   }
 
   createExpense(expense) {
@@ -96,7 +96,7 @@ class ExpensesTable extends React.Component {
 ExpensesTable.propTypes = {
   expenses: PropTypes.arrayOf(PropTypes.any).isRequired,
   updateExpenses: PropTypes.func.isRequired,
-  updateTotalValue: PropTypes.func.isRequired,
+  updateTotaWalletlValue: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({

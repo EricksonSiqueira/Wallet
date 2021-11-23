@@ -6,8 +6,36 @@ import { populateCurrenciesAction, fetchExchangeRates } from '../actions';
 import ExpensesTable from '../components/ExpensesTable';
 
 class Wallet extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      totalWalletValue: 0,
+    };
+    this.updateTotaWalletlValue = this.updateTotaWalletlValue.bind(this);
+  }
+
   componentDidMount() {
     this.fetchCurrencies();
+    this.updateTotaWalletlValue();
+  }
+
+  updateTotaWalletlValue() {
+    const { expenses } = this.props;
+    let totalValue = 0.00;
+    console.log(expenses);
+    if (expenses.length > 0) {
+      expenses.forEach((expense) => {
+        const { currency, value, exchangeRates } = expense;
+
+        const currencyObj = exchangeRates[currency];
+        const currencyValue = currencyObj.ask;
+        const exchangedValue = Number((currencyValue * value).toFixed(2));
+        totalValue += exchangedValue;
+      });
+    }
+
+    totalValue = totalValue.toFixed(2);
+    this.setState({ totalWalletValue: totalValue });
   }
 
   async fetchCurrencies() {
@@ -18,43 +46,9 @@ class Wallet extends React.Component {
     populateCurrencies(filteredCurrencies);
   }
 
-  createExpense(expense) {
-    const { value, description, currency, method, tag, exchangeRates, id } = expense;
-    let currencyValue = 1;
-    const currencyObj = exchangeRates[currency];
-    let onlyExchangeCashName = 'Real';
-    if (currency !== 'BRL') {
-      currencyValue = currencyObj.ask;
-      const cashName = currencyObj.name;
-      const cashNameArray = cashName.split('/');
-      [onlyExchangeCashName] = cashNameArray;
-    }
-    const convertedValue = currencyValue * value;
-    return (
-      <tr key={ id }>
-        <td>{description}</td>
-        <td>{tag}</td>
-        <td>{method}</td>
-        <td>{Number(value)}</td>
-        <td>{onlyExchangeCashName}</td>
-        <td>{Number(currencyValue).toFixed(2)}</td>
-        <td>{Number(convertedValue).toFixed(2)}</td>
-        <td>Real</td>
-        <td>
-          <button type="button">Editar</button>
-          <button
-            type="button"
-            data-testid="delete-btn"
-          >
-            Excluir
-          </button>
-        </td>
-      </tr>
-    );
-  }
-
   render() {
-    const { email, totalWalletValue } = this.props;
+    const { totalWalletValue } = this.state;
+    const { email } = this.props;
     return (
       <div>
         <header>
@@ -66,8 +60,8 @@ class Wallet extends React.Component {
             </p>
           </section>
         </header>
-        <WalletForm />
-        <ExpensesTable />
+        <WalletForm updateTotaWalletlValue={ this.updateTotaWalletlValue } />
+        <ExpensesTable updateTotaWalletlValue={ this.updateTotaWalletlValue } />
       </div>
     );
   }

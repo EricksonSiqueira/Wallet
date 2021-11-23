@@ -20,7 +20,7 @@ const walletReducer = (state = INITIAL_STATE, action) => {
   case REMOVE_EXPENSE:
     return {
       ...state,
-      expenses: [...action.payload],
+      expenses: action.payload,
     };
   case UPDATE_TOTAL:
     return {

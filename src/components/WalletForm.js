@@ -9,20 +9,14 @@ import { addExpenseAction, fetchExchangeRates, updateTotalAction } from '../acti
 const INITIAL_STATE = {
   value: 0,
   description: '',
-  currency: 'BRL',
-  method: 'credit',
-  tag: 'food',
+  currency: 'USD',
+  method: 'Cartão de crédito',
+  tag: 'Alimentação',
 };
 class WalletForm extends React.Component {
   constructor() {
     super();
-    this.state = {
-      value: 0,
-      description: '',
-      currency: 'USD',
-      method: 'Cartão de crédito',
-      tag: 'Alimentação',
-    };
+    this.state = INITIAL_STATE;
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
@@ -43,11 +37,13 @@ class WalletForm extends React.Component {
       const currencyObj = exchangeRates[currency];
       currencyValue = currencyObj.ask;
     }
-    updateTotal(currencyValue * value);
+    const exchangedValue = Number((currencyValue * value).toFixed(2));
+    updateTotal(exchangedValue);
 
     const expense = {
       id: idGlobal,
       ...this.state,
+      exchangedValue,
       exchangeRates,
     };
 

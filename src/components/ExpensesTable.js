@@ -1,10 +1,33 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { removeExpenseAction, updateTotalAction } from '../actions';
 
 class ExpensesTable extends React.Component {
+  constructor() {
+    super();
+    this.removeExpense = this.removeExpense.bind(this);
+  }
+
+  getExchangedValue(id, expenses) {
+    const expenseObj = expenses.find((expense) => expense.id === id);
+    const { exchangedValue } = expenseObj;
+    return (exchangedValue);
+  }
+
+  removeExpense({ target }) {
+    const elementId = Number(target.id);
+    const { expenses, updateExpenses, updateTotalValue } = this.props;
+    const updatedExpenses = expenses.filter((expense) => expense.id !== elementId);
+    const negativeValueToRemove = -(this.getExchangedValue(elementId, expenses));
+    console.log(negativeValueToRemove);
+    updateTotalValue(negativeValueToRemove);
+    updateExpenses(updatedExpenses);
+  }
+
   createExpense(expense) {
-    const { value, description, currency, method, tag, exchangeRates, id } = expense;
+    const { value, description, currency, method,
+      tag, exchangeRates, id } = expense;
     let currencyValue = 1;
     const currencyObj = exchangeRates[currency];
     let onlyExchangeCashName = 'Real';
@@ -29,7 +52,9 @@ class ExpensesTable extends React.Component {
           <button type="button">Editar</button>
           <button
             type="button"
+            id={ id }
             data-testid="delete-btn"
+            onClick={ this.removeExpense }
           >
             Excluir
           </button>
@@ -63,10 +88,17 @@ class ExpensesTable extends React.Component {
 
 ExpensesTable.propTypes = {
   expenses: PropTypes.arrayOf(PropTypes.any).isRequired,
+  updateExpenses: PropTypes.func.isRequired,
+  updateTotalValue: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   expenses: state.wallet.expenses,
 });
 
-export default connect(mapStateToProps)(ExpensesTable);
+const mapDispatchToProps = (dispatch) => ({
+  updateExpenses: (newExpenses) => dispatch(removeExpenseAction(newExpenses)),
+  updateTotalValue: (value) => dispatch(updateTotalAction(value)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ExpensesTable);

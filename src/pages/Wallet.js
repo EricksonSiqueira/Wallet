@@ -17,8 +17,38 @@ class Wallet extends React.Component {
     populateCurrencies(filteredCurrencies);
   }
 
+  createExpense(expense) {
+    const { value, description, currency, method, tag, exchangeRates, id } = expense;
+    let currencyValue = 1;
+    const currencyObj = exchangeRates[currency];
+    let onlyExchangeCashName = 'Real';
+    if (currency !== 'BRL') {
+      currencyValue = currencyObj.ask;
+      const cashName = currencyObj.name;
+      const cashNameArray = cashName.split('/');
+      [onlyExchangeCashName] = cashNameArray;
+    }
+    const convertedValue = currencyValue * value;
+    return (
+      <tr key={ id }>
+        <td>{description}</td>
+        <td>{tag}</td>
+        <td>{method}</td>
+        <td>{Number(value)}</td>
+        <td>{onlyExchangeCashName}</td>
+        <td>{Number(currencyValue).toFixed(2)}</td>
+        <td>{Number(convertedValue).toFixed(2)}</td>
+        <td>Real</td>
+        <td>
+          <button type="button">Editar</button>
+          <button type="button">Excluir</button>
+        </td>
+      </tr>
+    );
+  }
+
   render() {
-    const { email, totalWalletValue } = this.props;
+    const { email, totalWalletValue, expenses } = this.props;
     return (
       <div>
         <header>
@@ -44,6 +74,7 @@ class Wallet extends React.Component {
               <th>Moeda de conversão</th>
               <th>Editar/Excluir</th>
             </tr>
+            {expenses.map((expense) => this.createExpense(expense))}
           </tbody>
         </table>
       </div>
@@ -57,6 +88,7 @@ Wallet.defaultProps = {
 
 Wallet.propTypes = {
   email: PropTypes.string.isRequired,
+  expenses: PropTypes.arrayOf(PropTypes.any).isRequired,
   getExchangeRates: PropTypes.func.isRequired,
   populateCurrencies: PropTypes.func.isRequired,
   totalWalletValue: PropTypes.number,
@@ -65,6 +97,7 @@ Wallet.propTypes = {
 const mapStateToProps = (state) => ({
   email: state.user.email,
   totalWalletValue: state.wallet.totalWalletValue,
+  expenses: state.wallet.expenses,
 });
 
 const mapDispatchToProps = (dispatch) => ({

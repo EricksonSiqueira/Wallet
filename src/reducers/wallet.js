@@ -3,6 +3,7 @@ import { ADD_EXPENSE, UPDATE_TOTAL, POPULATE_CURRENCIES } from '../actions';
 
 const INITIAL_STATE = {
   totalWalletValue: 0,
+  idGlobal: 0,
   currencies: [],
   expenses: [],
 };
@@ -12,6 +13,7 @@ const walletReducer = (state = INITIAL_STATE, action) => {
   case ADD_EXPENSE:
     return {
       ...state,
+      idGlobal: state.idGlobal + 1,
       expenses: [...state.expenses, action.payload],
     };
   case UPDATE_TOTAL:

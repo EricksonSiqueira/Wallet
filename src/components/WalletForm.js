@@ -34,7 +34,7 @@ class WalletForm extends React.Component {
 
   async handleClick(event) {
     event.preventDefault();
-    const { addExpense, getExchangeRates, expenses, updateTotal } = this.props;
+    const { addExpense, getExchangeRates, expenses, updateTotal, idGlobal } = this.props;
     const { currency, value } = this.state;
     const exchangeRates = await getExchangeRates(expenses);
 
@@ -46,7 +46,7 @@ class WalletForm extends React.Component {
     updateTotal(currencyValue * value);
 
     const expense = {
-      id: expenses.length,
+      id: idGlobal,
       ...this.state,
       exchangeRates,
     };
@@ -90,11 +90,16 @@ class WalletForm extends React.Component {
   }
 }
 
+WalletForm.defaultProps = {
+  idGlobal: 0,
+};
+
 WalletForm.propTypes = {
   addExpense: PropTypes.func.isRequired,
   getExchangeRates: PropTypes.func.isRequired,
   updateTotal: PropTypes.func.isRequired,
   expenses: PropTypes.arrayOf(PropTypes.any).isRequired,
+  idGlobal: PropTypes.number,
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -105,6 +110,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state) => ({
   expenses: state.wallet.expenses,
+  idGlobal: state.wallet.idGlobal,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletForm);

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { removeExpenseAction } from '../actions';
+import { removeExpenseAction, editExpenseAction } from '../actions';
 
 class ExpensesTable extends React.Component {
   constructor() {
@@ -33,6 +33,7 @@ class ExpensesTable extends React.Component {
   }
 
   createExpense(expense) {
+    const { changeEditMode } = this.props;
     const { value, description, currency, method,
       tag, exchangeRates, id } = expense;
     let currencyValue = 1;
@@ -56,7 +57,13 @@ class ExpensesTable extends React.Component {
         <td>{Number(convertedValue).toFixed(2)}</td>
         <td>Real</td>
         <td>
-          <button type="button">Editar</button>
+          <button
+            type="button"
+            data-testid="edit-btn"
+            onClick={ () => changeEditMode({ bool: true, id }) }
+          >
+            Editar
+          </button>
           <button
             type="button"
             id={ id }
@@ -71,9 +78,9 @@ class ExpensesTable extends React.Component {
   }
 
   render() {
-    const { expenses } = this.props;
+    const { expenses, editor } = this.props;
     return (
-      <table>
+      <table style={ { color: editor ? 'orange' : 'black' } }>
         <tbody>
           <tr>
             <th>Descrição</th>
@@ -93,18 +100,26 @@ class ExpensesTable extends React.Component {
   }
 }
 
+ExpensesTable.defaultProps = {
+  editor: false,
+};
+
 ExpensesTable.propTypes = {
   expenses: PropTypes.arrayOf(PropTypes.any).isRequired,
   updateExpenses: PropTypes.func.isRequired,
   updateTotalValue: PropTypes.func.isRequired,
+  changeEditMode: PropTypes.func.isRequired,
+  editor: PropTypes.bool,
 };
 
 const mapStateToProps = (state) => ({
   expenses: state.wallet.expenses,
+  editor: state.wallet.editor,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   updateExpenses: (newExpenses) => dispatch(removeExpenseAction(newExpenses)),
+  changeEditMode: (bool) => dispatch(editExpenseAction(bool)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExpensesTable);

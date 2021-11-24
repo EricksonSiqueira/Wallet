@@ -20,8 +20,13 @@ class Wallet extends React.Component {
     this.getTotalValue();
   }
 
+  componentDidUpdate() {
+    this.getTotalValue();
+  }
+
   getTotalValue() {
     const { expenses } = this.props;
+    const { totalWalletValue } = this.state;
     let totalValue = 0.00;
     if (expenses.length > 0) {
       expenses.forEach((expense) => {
@@ -35,7 +40,9 @@ class Wallet extends React.Component {
     }
 
     totalValue = totalValue.toFixed(2);
-    this.setState({ totalWalletValue: totalValue });
+    if (totalWalletValue !== totalValue) {
+      this.setState({ totalWalletValue: totalValue });
+    }
   }
 
   updateTotalValue(value) {
@@ -66,8 +73,12 @@ class Wallet extends React.Component {
             </p>
           </section>
         </header>
-        <WalletForm updateTotalValue={ this.updateTotalValue } />
-        <ExpensesTable updateTotalValue={ this.updateTotalValue } />
+        <WalletForm
+          updateTotalValue={ this.updateTotalValue }
+        />
+        <ExpensesTable
+          updateTotalValue={ this.updateTotalValue }
+        />
       </div>
     );
   }
@@ -78,12 +89,14 @@ Wallet.propTypes = {
   expenses: PropTypes.arrayOf(PropTypes.any).isRequired,
   getExchangeRates: PropTypes.func.isRequired,
   populateCurrencies: PropTypes.func.isRequired,
+  // editor: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   email: state.user.email,
   totalWalletValue: state.wallet.totalWalletValue,
   expenses: state.wallet.expenses,
+  editor: state.wallet.editor,
 });
 
 const mapDispatchToProps = (dispatch) => ({

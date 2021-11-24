@@ -4,10 +4,16 @@ export const ADD_EXPENSE = 'ADD_EXPENSE';
 export const REMOVE_EXPENSE = 'REMOVE_EXPENSE';
 export const UPDATE_TOTAL = 'UPDATE_TOTAL';
 export const POPULATE_CURRENCIES = 'POPULATE_CURRENCIES';
+export const EDIT_EXPENSE = 'EDIT_EXPENSE';
 
 export const loginAction = (email) => ({
   type: USER_LOGIN,
   email,
+});
+
+export const editExpenseAction = (payload = { bool: false, id: 0 }) => ({
+  type: EDIT_EXPENSE,
+  payload,
 });
 
 export const addExpenseAction = (payload) => ({
